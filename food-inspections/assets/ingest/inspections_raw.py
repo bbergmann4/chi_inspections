@@ -7,8 +7,8 @@ connection: GCP_ETL
 
 materialization:
   type: table
-  strategy: insert_delete
-  unique_key: inspection_id
+  strategy: merge
+  primary_key: inspection_id
 
 columns:
   - name: inspection_id
@@ -43,7 +43,7 @@ columns:
     type: string
     description: The zip code where the establishment is located
   - name: inspection_date
-    type: timestamp 
+    type: date 
     description: The date when the inspection occurred
   - name: inspection_type
     type: string
@@ -90,7 +90,7 @@ def materialize():
     basic = HTTPBasicAuth(os.getenv('CHI_API_ID'), os.getenv('CHI_API_SECRET'))
     url = "https://data.cityofchicago.org/api/v3/views/qizy-d2wf/export.csv"
     names = ['inspection_id', 'dba_name', 'aka_name', 'license_number', 'facility_type', 'risk', 'address', 'city', 'state', 'zip_code', 'inspection_date', 'inspection_type', 'results', 'violations', 'latitude', 'longitude', 'location']
-  
+    
     max_retries = 5
     for attempt in range(max_retries):
         try:
@@ -112,6 +112,8 @@ def materialize():
         raise Exception("Error fetching data:  datafile empty")
     
     df['extracted_at'] = datetime.utcnow().isoformat()
+    df['inspection_id'] = df['inspection_id'].astype(pd.Int64Dtype())
+    df['license_number'] = df['license_number'].astype(pd.Int64Dtype())
 
     print (f"Fetched {len(df)} records")
     # Add extracted_at timestamp for lineage

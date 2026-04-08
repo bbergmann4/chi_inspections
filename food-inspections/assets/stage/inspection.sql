@@ -1,33 +1,36 @@
 /* @bruin
 
 name: stage.inspection
-type: bigquery
+type: bq.sql
+connection: GCP_ETL
+
+
 materialization:
   type: table
-   
+  partition_by: date_trunc(inspection_date, MONTH)
+  strategy: merge
+  primary_key: inspection_id   
 depends:
    - ingest.inspections_raw
 
 
+
 # you can define column metadata and quality checks
 columns: 
-  - name: inpection_id 
-    type: integer
+  - name: inspection_id 
+    type: INT64
     primary_key: true
     description: the unique identifier for each inspection
     checks: 
       - name: not_null 
-      - name: unique
   - name: license_number 
-    type: integer 
+    type: INT64
     description: the license number of the facility being inspected
     checks: 
       - name: not_null  
   - name: licensee_id 
     type: string 
     description: a hashed identifier for the licensee, created by hashing the license number and dba name together
-    checks: 
-      - name: not_null
   - name: address_id
     type: string
     description: a hashed identifier for the address, created by hashing the address, city, state, and zip code together
@@ -49,25 +52,40 @@ columns:
     description: the type of inspection conducted (e.g. "Canvass", "Complaint", "License Renewal", "Pre-permit")
     checks: 
       - name: accepted_values
-      - accepted_values: ['COMPLAINT','SHORT FORM COMPLAINT','CANVASS','LICENSE RE-INSPECTION','CANVASS RE-INSPECTION','COMPLAINT RE-INSPECTION','SUSPECTED FOOD POISONING','NON-INSPECTION','RECENT INSPECTION','CONSULTATION','NOT READY','SUSPECTED FOOD POISONING RE-INSPECTION','ASSESSMENT','SPECIAL EVENTS (FESTIVALS)','COVID COMPLAINT','NO ENTRY','OUT OF BUSINESSCOMPLAINT','SHORT FORM COMPLAINT','CANVASS','LICENSE RE-INSPECTION','CANVASS RE-INSPECTION','COMPLAINT RE-INSPECTION','SUSPECTED FOOD POISONING','NON-INSPECTION','RECENT INSPECTION','CONSULTATION','NOT READY','SUSPECTED FOOD POISONING RE-INSPECTION','ASSESSMENT','SPECIAL EVENTS (FESTIVALS)','COVID COMPLAINT','NO ENTRY','OUT OF BUSINESS]
+        value: ['LICENSE','COMPLAINT','SHORT FORM COMPLAINT','CANVASS','LICENSE RE-INSPECTION','CANVASS RE-INSPECTION','COMPLAINT RE-INSPECTION','SUSPECTED FOOD POISONING','NON-INSPECTION','RECENT INSPECTION','CONSULTATION','NOT READY','SUSPECTED FOOD POISONING RE-INSPECTION','ASSESSMENT','SPECIAL EVENTS (FESTIVALS)','COVID COMPLAINT','NO ENTRY','OUT OF BUSINESS']
   - name: results 
     type: string 
     description: the results of the inspection (e.g. "Pass", "Fail", "Pass w/ Conditions")
     checks: 
       - name: accepted_values
-      - accepted_values: ["Pass", "Fail", "Pass w/ Conditions", "Not Ready", "No Entry", "Out of Business", "Business Not Located"]
+        value: ["Pass", "Fail", "Pass w/ Conditions", "Not Ready", "No Entry", "Out of Business", "Business Not Located"]
   - name: violation_count  
     type: int 
     description: the number of violations found during the inspection
   - name: violation_details
     type: string
     description: details about the violations found during the inspection
+  - name: completed_flag
+    type: boolean
+    description: a flag indicating whether the inspection is completed, derived from the results column
+    checks:
+      - name: not_null
+      - name: accepted_values
+        value: [true, false]
+  - name: pass_flag
+    type: boolean
+    description: a flag indicating whether the inspection passed or failed, derived from the results column
+    checks:
+      - name: not_null
+      - name: accepted_values
+        value: [true, false]
+
     
 # you can also define custom checks 
 custom_checks:
   - name: row count is greater than zero 
     description: this check ensures that the table is not empty 
-    query: SELECT count(*) > 1 FROM dataset.player_stats
+    query: SELECT count(*) > 1 FROM ingest.inspections_raw
     value: 1
 
 
@@ -76,16 +94,26 @@ custom_checks:
 @bruin */
 
 SELECT 
-    inspection_id,
+    inspection_id ,
     license_number,
-    MD5(license_number::text||dba_name) AS licensee_id,
-    MD5(address||nvl(city, 'CHICAGO')||state||zip_code) AS address_id,
+    MD5(COALESCE(cast(license_number as string), '')||COALESCE(dba_name, '')) AS licensee_id,
+    MD5(COALESCE(address, '')||COALESCE(city, 'CHICAGO')||COALESCE(state, 'IL')||COALESCE(zip_code, 0)) AS address_id,
     inspection_date,
     upper(inspection_type) as inspection_type,
     results,
     -- count the number of violations by splitting the violations string on the delimiter and counting the resulting elements
     CASE 
         WHEN violations IS NULL THEN 0 
-        ELSE substring(violations, 1, position(',' in violations) - 1)::int
+        ELSE array_length(REGEXP_EXTRACT_ALL(violations, 'Comments'))
+        -- Generally, each violation is described with a rule citation followed by a description headed with the word Comments, so we can count the number of violations by counting the number of comments in the violations string
     END AS violation_count,
-    violations AS violation_details
+    violations AS violation_details,
+    case 
+        when results IN ('Pass', 'Pass w/ Conditions', 'Fail') then true
+        else false
+    end as completed_flag,
+    case 
+        when results IN ('Pass', 'Pass w/ Conditions') then true
+        else false
+    end as pass_flag
+FROM ingest.inspections_raw
