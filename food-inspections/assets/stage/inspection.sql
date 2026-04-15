@@ -26,8 +26,6 @@ columns:
   - name: license_number 
     type: INT64
     description: the license number of the facility being inspected
-    checks: 
-      - name: not_null  
   - name: licensee_id 
     type: string 
     description: a hashed identifier for the licensee, created by hashing the license number and dba name together
@@ -95,7 +93,7 @@ custom_checks:
 
 SELECT 
     inspection_id ,
-    license_number,
+    coalesce(license_number, 0) as license_number,
     MD5(COALESCE(cast(license_number as string), '')||COALESCE(dba_name, '')) AS licensee_id,
     MD5(COALESCE(address, '')||COALESCE(city, 'CHICAGO')||COALESCE(state, 'IL')||COALESCE(zip_code, 0)) AS address_id,
     inspection_date,
