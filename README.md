@@ -107,7 +107,7 @@ In order to safely store secrets in this project, I am using codespace secrets t
 
  **Your GCP credentials**
 
- Service Account
+Service Account
   - Name:  GCP_SERVICE_CRED
   - Secret:  _The contents of your ETL service account json_
 
@@ -116,10 +116,10 @@ Project ID
   - Secret:  _The project id associated with the above service account (looks like random-word-1234-a2)_
 
 **Your Chicago Data Portal credenials**
-
+ 
   - Name:  CHI_API_ID
   - Secret:  _The API Key ID provided by data.cityofchicago.org_
-  
+   
   - Name:  CHI_API_SECRET
   - Secret:  _The API Key Secret provided by data.cityofchicago.org_
 
@@ -155,7 +155,7 @@ Project ID
 
 To learn more about this process, go to [food-inspections/README.MD](food-inspections/README.md)
 
-##The Report
+## The Report
 
 I am using Google Data Studio to show results.
 
