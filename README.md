@@ -148,6 +148,8 @@ Project ID
 
   ```
   bruin run food-inpections
+
+  # Troubleshooting:  If you encounter Not Found errors, try 'bruin run food-inspections --full-refresh' 
   ```
 
   On the first run it will take longer as bruin uses uv to load dependencies.  
@@ -189,6 +191,9 @@ Click on bigquery and select your project and the "report" schema created by the
 If you no longer wish to use this pipeline or dataset, you can run the cleanup script.
 
 WARNING:  This will permanently delete the datasets you created in BigQuery
+
 ```
 uv run cleanup.py
 ```
+
+If you are planning to try to rerun this pipeline from scratch, you may want to run `bruin clean` to clear your cache/log history or run `bruin run food-inspections --full-refresh` when rebuilding.
