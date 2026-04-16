@@ -5,9 +5,9 @@ Data Engineering Zoomcamp 2026 Project
 
 Use this repo to build your own data pipeline for Chicago Food Safety Inspections from the Chicago Data Portal to the Google Cloud.
 1.  Create a [Data Portal API Key](https://data.cityofchicago.org/signup) and a [GCP Service Account](https://developers.google.com/workspace/guides/create-credentials) and load it in to [Github Codespace Secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces) (CHI_API_ID, CHI_API_SECRET, GCP_PROJECT_ID, GCP_SERVICE_CRED)
-2.  Open a Github Codespace and run `bruin run food-inspections`
-3.  Copy [my report](https://datastudio.google.com/s/gOLV-FVKGrk) and add your own data.
-4.  When you are done, run the cleanup script.  `uv run cleanup.py`
+2.  Open in Github Codespace and run `bruin run food-inspections`
+3.  Copy [my report](https://datastudio.google.com/s/gOLV-FVKGrk) and link your own data.
+4.  When you are done, delete your assets in bigquery with the cleanup script:  `uv run cleanup.py`
 
 Full instructions below.
 
@@ -22,15 +22,17 @@ This pipeline will answer questions like:
 
 ## Project Goals
 - Create an end-to-end ELT process ending with a simple report
-- Make it replicable for peer review with easy-to-follow documentation and ~15 minute workflow
-- Explore a Chicago Data Portal dataset to learn how it works
+- Make it replicable for peer review with easy-to-follow documentation, minimal configuration, and <15 minute workflow
+- Explore a Chicago Data Portal dataset to learn how it works and create a data model for future exploration
 
 ## Tools & Approach
 In order to accomplish these goals, I plan to use the following tools:
-- Github codespaces as an easy replicable virtual environment 
-- Create Python environment in uv for replicable package management 
-- Orchestrate resource allocation, ELT, and testing with Bruin
-- Utilize BigQuery and Data Studio for storage, analysis, and reporting
+- Github codespaces as an easy replicable virtual environment, 
+- Create Python environment in uv for replicable package management,
+- Orchestrate resource allocation, ETL, and testing with Bruin,
+- Use Python and SQL assets within Bruin to ingest and reshape data,
+- Utilize Google BigQuery and Data Studio for storage, analysis, and reporting,
+- Provide a Python script to remove resources when done.  
 
 # The Data
 
@@ -149,10 +151,9 @@ Project ID
   ```
   bruin run food-inpections
 
-  # Troubleshooting:  If you encounter Not Found errors, try 'bruin run food-inspections --full-refresh' 
   ```
 
-  On the first run it will take longer as bruin uses uv to load dependencies.  
+  On the first run it will take longer as bruin uses uv to load dependencies.  If you encounter Not Found errors, try `bruin run food-inspections --full-refresh`
 
 To learn more about this process, go to [food-inspections/README.MD](food-inspections/README.md)
 
