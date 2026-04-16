@@ -71,7 +71,7 @@ Before getting started, you will need to have your own Google Cloud Platform acc
 
 ### Google Cloud Platform
 
-You will need to create service account credentials [full instructions here](https://developers.google.com/workspace/guides/create-credentials).  
+You will need to create service account credentials [(full instructions here)](https://developers.google.com/workspace/guides/create-credentials).  
 
 1. Go to Menu > IAM & Admin > Service Accounts
 2. Click Create service account
@@ -82,7 +82,8 @@ You will need to create service account credentials [full instructions here](htt
 You will need to provide the GCP Service Account the following minimum privileges:
  - roles/bigquery.dataEditor 
  - roles/bigquery.jobUser 
- - roles/bigquery.dataViewer 
+ - roles/bigquery.dataViewer
+   
 Or, you can simply assign the BigQuery Admin role.  
 
 ### Chicago Data Portal API
