@@ -73,6 +73,12 @@ Before getting started, you will need to have your own google cloud platform acc
 
 You will need to create service account credentials by following the instructions [here](https://developers.google.com/workspace/guides/create-credentials).  
 
+In short,
+1. Go to Menu > IAM & Admin > Service Accounts
+2. Click Create service account
+3. Fill out details and assign roles to the account
+4. Once completed, you will return to your list of service accounts.  Click Keys > Add Key > Create New Key > JSON
+5. Download that key to a safe location. 
 
 You will need to provide the GCP Service Account the following minimum privileges:
  - roles/bigquery.dataEditor 
@@ -172,11 +178,17 @@ Once you have run the pipeline, recreating the report is simple.
 
 1.  Go to my report online [here](https://datastudio.google.com/s/gOLV-FVKGrk)
 2.  Click the dots to make a copy 
-<img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/make_a_copy.png" width="20%">
+<img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/make_a_copy.png" width="30%">
 It may ask you some setup steps if you haven't used Data Studio before.
 3.  Now, it will give you options to replace my datasource with your own.  You can add the tables from your pipeline by clicking on the dropdown and selecting add new datasource.  
-<img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/copy_datasource.png" width="20%">
+<img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/copy_datasource.png" width="30%">
 Click on bigquery and select your project and the "report" schema created by the pipeline.  There you should have copies of each table used for this report.    
 
+## Cleanup
 
+If you no longer wish to use this pipeline or dataset, you can run the cleanup script.
 
+WARNING:  This will permanently delete the datasets you created in BigQuery
+```
+uv run cleanup.py
+```
