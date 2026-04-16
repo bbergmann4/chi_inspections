@@ -72,7 +72,7 @@ In order to safely store secrets in this project, I am using codespace secrets t
 1.  Login to github in your browswer, open your copy of this repo, and go to settings in the upper right 
 2.  Under  Security there is "Secrets and variables" header.  Click on Codespaces.
 
-![Image of Security and quality section](docs/images/gihub_codespace_secrets.png)
+<img src="docs/images/gihub_codespace_secrets.png" width="30%">
 
 3.  Create the following 4 codespace secrets in this repo:
 
