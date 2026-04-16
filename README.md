@@ -134,7 +134,7 @@ You can see my report [here](https://datastudio.google.com/s/gOLV-FVKGrk) or see
 The report uses the report.inspections_by_month and report.inspections_by_licensee tables created in the pipeline.
 
 Three charts show monthly data from ispections_by_month, for example this show inspection trends for 2025:
-![Monthly Inspection Trends 2025](docs/images//Inspections by Month_Time series_2025.png)
+![Monthly Inspection Trends 2025](docs/images/Inspections by Month_Time series_2025.png)
 On the live report, choose the year(s) you want to evaluate using the year dropdown at the bottom of the clipboard on the top left.
 
 And a graphic on the left provides the "Worst Offender" of the last six months from the inspections_by_licensee table.
