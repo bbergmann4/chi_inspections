@@ -63,9 +63,9 @@ Our end result of this process is a pretty simple star schema:
 
 Feel free to create a fork of this repository or use github importer to make a disconnected copy in your github.  
 
-This project is intended to be run in Github Codespaces for quick replicability.  All of the tools needed will be installed using the .devcontainer.json file and you will provide all credentials needed through codespace secrets.  It is possible to run this process in a docker image or standalone virtual machine with small changes.  Instead of storing secrets in github, you would store them as environment variables.  Use .devcontainer as your guide for dependencies.  
+This project is intended to be run in Github Codespaces for quick replicability.  All of the tools needed will be installed using the .devcontainer.json file and you will provide all credentials needed through codespace secrets.  It is possible to run this process in a docker image with small changes:  Use [docs/dockeroption.yml](docs/dockeroption.yml) as your starting point.    
 
-Before getting started, you will need to have your own google cloud platform account. The files are of relatively trivial size and it is not a highly computational process.  You will also be required to provide basic contact information to sign up for a free API account with the City of Chicago (described below)
+Before getting started, you will need to have your own Google Cloud Platform account with billing or a trial enabled. The storage and compute resources requred are relatively trivial.  You will also be required to provide basic contact information to sign up for a free API account with the City of Chicago (described below).
 
 ## Credentials
 
@@ -112,7 +112,7 @@ In order to safely store secrets in this project, I am using codespace secrets t
 
 Project ID
   - Name:   GCP_PROJECT_ID
-  - Secret:  _The project id associated with the above service accounts (looks like random-word-1234-a2)_
+  - Secret:  _The project id associated with the above service account (looks like random-word-1234-a2)_
 
 **Your Chicago Data Portal credenials**
 
@@ -158,7 +158,7 @@ To learn more about this process, go to [food-inspections/README.MD](food-inspec
 
 I am using Google Data Studio to show results.
 
-You can see my report [here](https://datastudio.google.com/s/gOLV-FVKGrk) or see a pdf copy in [docs/report_2026_sofar.pdf](docs/report_2026_sofar.pdf).  My report will remain accessible through 2026.
+You can see my report [here](https://datastudio.google.com/s/gOLV-FVKGrk) or see a static pdf copy in [docs/report_2026_sofar.pdf](docs/report_2026_sofar.pdf).  
 
 The report uses the report.inspections_by_month and report.inspections_by_licensee tables created in the pipeline.
 

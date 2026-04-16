@@ -18,6 +18,7 @@ ENV PATH="/root/.bruin/bin:/home/vscode/.bruin/bin:${PATH}"
 USER vscode
 
 #Optional, set your secrets.  WARNING:  Add this file to your .gitignore!
+#Alternatively, you can set these environment variables after launching container, by running `export VARIABLE_NAME=value` in the terminal.
 #ENV GCP_SERVICE_CRED="The contents of your service account json" 
 #ENV GCP_PROJECT_ID="The project id associated with the above service account"
 #ENV CHi_API_ID="The API Key ID provided by data.cityofchicago.org"
