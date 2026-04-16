@@ -72,7 +72,7 @@ In order to safely store secrets in this project, I am using codespace secrets t
 1.  Login to github in your browswer, open your copy of this repo, and go to settings in the upper right 
 2.  Under  Security there is "Secrets and variables" header.  Click on Codespaces.
 
-<img src="https://github.com/bbergmann4/chi_inspections/blob/690a854990a1d6ddb227952db04752e7b748a756/docs/images/create_codespace.png" width="30%">
+<img src="https://github.com/bbergmann4/chi_inspections/blob/4f0e0a10b6f949fa0ebbc1885975b86e904b3b5c/docs/images/github_codespace_secrets.png" width="30%">
 
 3.  Create the following 4 codespace secrets in this repo:
 
@@ -108,7 +108,7 @@ Project ID
   Once you have copied this repo and loaded the credentials, you should have everything you need to run the pipeline:
   1.  In your repo in github, click the green "Code" button and click "create a codespace on main".
 
-  ![green button to start codespace](docs/images/create_codespace.png)
+<img src="https://github.com/bbergmann4/chi_inspections/blob/690a854990a1d6ddb227952db04752e7b748a756/docs/images/create_codespace.png" width="30%">
 
   The first run may take longer as it build the devcontainer and installs dependencies.
 
