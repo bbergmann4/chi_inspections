@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/devcontainers/universal:2
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install uv (Astral's Python package manager)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add uv to PATH (installed under root or vscode depending on user)
+ENV PATH="/root/.local/bin:/home/vscode/.local/bin:${PATH}"
+
+# Install Bruin CLI
+RUN curl -LsSf https://getbruin.com/install/cli | sh
+
+# Ensure Bruin is on PATH
+ENV PATH="/root/.bruin/bin:/home/vscode/.bruin/bin:${PATH}"
+
+# Set default user (matches devcontainer behavior)
+USER vscode
+
+#Optional, set your secrets.  WARNING:  Add this file to your .gitignore!
+#ENV GCP_SERVICE_CRED="The contents of your service account json" 
+#ENV GCP_PROJECT_ID="The project id associated with the above service account"
+#ENV CHi_API_ID="The API Key ID provided by data.cityofchicago.org"
+#ENV CHI_API_SECRET="The API Key Secret provided by data.cityofchicago.org"
+
+# Set working directory
+WORKDIR /workspace/install/cli | sh
