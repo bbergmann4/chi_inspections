@@ -1,109 +1,29 @@
-# Bruin - Sample Pipeline
+## How to Run this Pipline
+From the root directory (CHI_INSPECTIONS)
 
-Congrats! 🎉 You just created your first Bruin Pipeline!
-
-This pipeline is a simple example of a Bruin project. It demonstrates how to use the `bruin` CLI to build and run a pipeline.
-DuckDB was chosen for its simplicity. This setup assumes DuckDB is available; you can swap `duckdb.sql` asset types.
-
-The pipeline includes the following sample assets:
-- `dataset.players`: An ingestr asset that loads chess player data into DuckDB.
-- `dataset.player_stats`: A DuckDB SQL asset that builds a table from `dataset.players`.
-- `my_python_asset`: A Python asset that prints a message.
-
-## Setup
-This template includes a `.bruin.yml` with sample DuckDB and chess connections. You can replace or extend with your connections and environments as needed.
-
-Here's a sample `.bruin.yml` file:
-
-```yaml
-default_environment: default
-environments:
-  default:
-    connections:
-      duckdb:
-        - name: "duckdb-default"
-          path: "duckdb.db"
-      chess:
-        - name: "chess-default"
-          players:
-            - "FabianoCaruana"
-            - "Hikaru"
-            - "MagnusCarlsen"
-            - "GothamChess"
-            - "DanielNaroditsky"
-            - "AnishGiri"
-            - "Firouzja2003"
-            - "LevonAronian"
-            - "WesleySo"
-            - "GarryKasparov"
-```
-
-You can simply switch the environment using the `--environment` flag, e.g.:
-
-```shell
-bruin validate --environment production . 
-```
-
-## Running the pipeline
-
-bruin CLI can run the whole pipeline or any task with the downstreams:
-
-```shell
-bruin run .
-```
-
-```shell
-Starting the pipeline execution...
-
-[18:42:58] Running:  my_python_asset
-[18:42:58] Running:  dataset.players
-[18:42:58] [my_python_asset] >> warning: `--no-sync` has no effect when used outside of a project
-[18:42:58] [my_python_asset] >> hello world
-[18:42:58] Finished: my_python_asset (191ms)
-⋮
-[18:43:04] Finished: dataset.player_stats:player_count:not_null (24ms)
-[18:43:04] Finished: dataset.player_stats:player_count:positive (33ms)
-[18:43:04] Finished: dataset.player_stats:name:unique (42ms)
-
-==================================================
-
-PASS my_python_asset 
-PASS dataset.players 
-PASS dataset.player_stats .....
+```run bruin food-inspections```
 
 
-bruin run completed successfully in 5.439s
+## What's happening
 
- ✓ Assets executed      3 succeeded
- ✓ Quality checks       5 succeeded
-```
-
-You can also run a single task:
-
-```shell
-bruin run assets/my_python_asset.py                         
-```
-
-```shell
-Starting the pipeline execution...
-
-[23:00:02] Running:  my_python_asset
-[23:00:02] >> warning: `--no-sync` has no effect when used outside of a project
-[23:00:02] >> hello world
-[23:00:02] Finished: my_python_asset (162ms)
-
-==================================================
-
-PASS my_python_asset 
-
-
-bruin run completed successfully in 162ms
-
- ✓ Assets executed      1 succeeded
-```
-
-You can optionally pass a `--downstream` flag to run the task with all of its downstreams.
-
-That's it, you are all set. Happy Building!
-
-If you want to dig deeper, jump into the [Concepts](https://getbruin.com/docs/bruin/getting-started/concepts.html) to learn more about the underlying concepts Bruin use for your data pipelines.
+The pipeline is orchestrating the following process
+- Initializing a virtual environment and installing dependencies
+- Connecting to your GCP Project using the instructions in .bruin.yaml to pull from the github secrets you provided 
+- Validating the scripts in the pipeline
+- Extraction:  Running assets/ingest/inspections_raw.py to
+    - Retrieve your API secrets and request the data from the Chicago Data Portal
+    - Download the data into a dataframe
+    - Materialize a table in BigQuery
+- Transformation:  Running assets/stage/inspections.sql
+    - Creates a normalized inspections table and fills in null values
+    - Creates unique identifiers for the licensees/businesses and their locations/addresses.
+    - Runs the vast majority of checks
+    - Loads in to bigquery table stage.inspection
+- Tranformation:  Running assets/stage/licensee.sql and location.sql
+    - Using the identifiers created in inspections to create unique rows by licensee and location
+    - Loads in to stage.licensee and stage.location respectively
+- Reporting:  Runnign assets/report/inspection_by_month.sql and inspection_by_licensee.sql:
+    - Rolls up aggregates of inspection by year and month for a month-by-month report
+    - Ranks licensees by most inspections or violations within certain periods (this month, last month, last six months, last 12 months)
+    - Loads in to report.inspection_by_month with unique rows for year/month and report.inspection_by_licensee with unique rows by metric and period.
+- Flags all the checks passed and failed 

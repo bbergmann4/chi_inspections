@@ -24,9 +24,15 @@ In order to accomplish these goals, I plan to use the following tools:
 
 The City of Chicago maintains a large library of public datasets in a variety of formats.  Many of these are accessible through their SODA3 API.  The data from this project is sourced from the following Food Inspections Since 07/01/2018 dataset.
 
+This metadata page provides a description of the dataset, columns, datatypes, and the api url.
+
 [Food Inspections Metadata](https://data.cityofchicago.org/Health-Human-Services/Food-Inspections-7-1-2018-Present/qizy-d2wf/about_data)
 
-# Project Evaluation
+More information on understanding the data is available here:  
+
+[Food Inspection Data Description](docs/foodinspections_description.pdf)
+
+# Recreating this Data Pipeline
 
 ## Initial Setup
 
@@ -46,10 +52,10 @@ You will need to create service account credentials by following the instruction
 
 
 You will need to provide the GCP Service Account the following minimum privileges:
- - roles/storage.objectAdmin (bucket level after creation)
- - roles/bigquery.dataEditor (dataset level)
- - roles/bigquery.jobUser (project leve)
- - roles/bigquery.dataViewer (dataset level)
+ - roles/bigquery.dataEditor 
+ - roles/bigquery.jobUser 
+ - roles/bigquery.dataViewer 
+Or, you can simply assign the BigQuery Admin role.  
 
 ### Chicago Data Portal API
 
@@ -63,8 +69,11 @@ In order to call the API, you will need to have an api key. You can do this by v
 ### Storing Credentials
 
 In order to safely store secrets in this project, I am using codespace secrets that act as environment variables within the VM.
-1.  Login to github in your browswer, open your copy of this repo, and go to settings
+1.  Login to github in your browswer, open your copy of this repo, and go to settings in the upper right 
 2.  Under  Security there is "Secrets and variables" header.  Click on Codespaces.
+
+![Image of Security and quality section](docs/images/gihub_codespace_secrets.png)
+
 3.  Create the following 4 codespace secrets in this repo:
 
  **Your GCP credentials**
@@ -84,3 +93,55 @@ Project ID
   
   - Name:  CHI_API_SECRET
   - Secret:  _The API Key Secret provided by data.cityofchicago.org_
+
+  ## The Pipeline
+  ### Bruin
+  This project uses Bruin to orchestrate the following tasks in our ELT pipeline:
+   - Resource Allocation:  Bruin will create three datasets in BigQuery for our tables:  ingest, stage, report.
+   - Extraction:  Using a python script, Bruin will run the an API call to the Chicago Data Portal and download a csv of the raw inspection data.
+   - Load:  Bruin will create a bigquery table and load our raw data.   
+   - Transformations:  We will shape that data in Big Query into three staging tables and two reporting tables.
+   - Quality Checks:  Bruin will run 20 quality checks to help us identify any issues.  
+
+  ### Running the Pipeline
+
+  Once you have copied this repo and loaded the credentials, you should have everything you need to run the pipeline:
+  1.  In your repo in github, click the green "Code" button and click "create a codespace on main".
+
+  ![green button to start codespace](docs/images/create_codespace.png)
+
+  The first run may take longer as it build the devcontainer and installs dependencies.
+
+
+  2.  The developer environment will open.  If you like, you can run in browser or [switch to an IDE like VSCODE](https://docs.github.com/en/codespaces/developing-in-a-codespace/using-github-codespaces-in-visual-studio-code)
+
+  3.  In the terminal, run 
+
+  ```
+  bruin run food-inpections
+  ```
+
+  On the first run it will take longer as bruin uses uv to load dependencies.  
+
+To learn more about this process, go to [food-inspections/README.MD](food-inspections/README.md)
+
+##The Report
+
+I am using Google Data Studio to show results.
+
+You can see my report [here](https://datastudio.google.com/s/gOLV-FVKGrk) or see a pdf copy in [docs/report_2026_sofar.pdf](docs/report_2026_sofar.pdf).  My report will remain accessible through 2026.
+
+The report uses the report.inspections_by_month and report.inspections_by_licensee tables created in the pipeline.
+
+Three charts show monthly data from ispections_by_month, for example this show inspection trends for 2025:
+![Monthly Inspection Trends 2025](docs/images/Inspections by Month_Time series_2025.png)
+On the live report, choose the year(s) you want to evaluate using the year dropdown at the bottom of the clipboard on the top left.
+
+And a graphic on the left provides the "Worst Offender" of the last six months from the inspections_by_licensee table.
+![Licensee with Most Violations Last Six Months](docs/images/licensee_worstviolations_last6mo.png)
+You can change the period at the bottom of this clipboard.
+
+## Recreating the Report
+
+
+

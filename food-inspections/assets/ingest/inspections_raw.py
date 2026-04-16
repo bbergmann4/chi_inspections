@@ -83,8 +83,8 @@ def materialize():
     Fetch Chicago Park District event data from the API endpoint.
     
     - Reads CHI_API environment variables
-    - Fetches event data from the API in batches of 500 records until no more data is available or a safety offset limit is reached
-    - Returns concatenated DataFrame with extracted_at timestamp
+    - Fetches event data from the API as a csv and loads it into a DataFrame
+    - Returns DataFrame with some types processing and an extracted_at timestamp
     """
 
     basic = HTTPBasicAuth(os.getenv('CHI_API_ID'), os.getenv('CHI_API_SECRET'))
