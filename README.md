@@ -1,22 +1,36 @@
 # chi_inspections
 Data Engineering Zoomcamp 2026 Project
 
+# Quickstart
+
+Use this repo to build your own data pipeline for Chicago Food Safety Inspections from the Chicago Data Portal to the Google Cloud.
+1.  Create a [Data Portal API Key](https://data.cityofchicago.org/signup) and a [GCP Service Account](https://developers.google.com/workspace/guides/create-credentials) and load it in to [Github Codespace Secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces) (CHI_API_ID, CHI_API_SECRET, GCP_PROJECT_ID, GCP_SERVICE_CRED)
+2.  Open a Github Codespace and run `bruin run food-inspections`
+3.  Copy [my report](https://datastudio.google.com/s/gOLV-FVKGrk) and add your own data.
+4.  When you are done, run the cleanup script.  `uv run cleanup.py`
+
+Full instructions below.
 
 # The Problem
 This workflow aims to build a pipeline from the City of Chicago’s data portal to a big query data warehouse and dashboard. The pipeline will load, validate, and re-structure this data.
 
+
+This pipeline will answer questions like:
+ -  How do inspection results compare month to month or year to year?  In other words, what is the worst month to eat out in Chicago?
+ -  Which restaurants get the most violations?  What places should I avoid?
+
+
 ## Project Goals
 - Create an end-to-end ELT process ending with a simple report
 - Make it replicable for peer review with easy-to-follow documentation and ~15 minute workflow
-- Explore the Chicago Data Portal
+- Explore a Chicago Data Portal dataset to learn how it works
 
 ## Tools & Approach
 In order to accomplish these goals, I plan to use the following tools:
 - Github codespaces as an easy replicable virtual environment 
 - Create Python environment in uv for replicable package management 
-- Orchestrate ELT and testing with Bruin
-- Utilize BigQuery and Google Looker for storage, analysis, and reporting
-- The workflow was  built in Github Codespaces, using codespace secrets for a clean environment and replicability
+- Orchestrate resource allocation, ELT, and testing with Bruin
+- Utilize BigQuery and Data Studio for storage, analysis, and reporting
 
 # The Data
 
@@ -31,6 +45,15 @@ This metadata page provides a description of the dataset, columns, datatypes, an
 More information on understanding the data is available here:  
 
 [Food Inspection Data Description](docs/foodinspections_description.pdf)
+
+## The Data Model
+
+Our end result of this process is a pretty simple star schema:
+  - Inspection:  Our fact table with 1 row per inspection
+  - Licensee:  A dimension table describing the business, facility, or kitchen
+  - Location:  A dimension table describing the address 
+
+![Data Model](docs/images/data_model_squail.png)
 
 # Recreating this Data Pipeline
 
@@ -144,6 +167,16 @@ And a graphic on the left provides the "Worst Offender" of the last six months f
 You can change the period at the bottom of this clipboard.
 
 ## Recreating the Report
+
+Once you have run the pipeline, recreating the report is simple.  
+
+1.  Go to my report online [here](https://datastudio.google.com/s/gOLV-FVKGrk)
+2.  Click the dots to make a copy 
+<img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/make_a_copy.png" width="20%">
+It may ask you some setup steps if you haven't used Data Studio before.
+3.  Now, it will give you options to replace my datasource with your own.  You can add the tables from your pipeline by clicking on the dropdown and selecting add new datasource.  
+<img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/copy_datasource.png" width="20%">
+Click on bigquery and select your project and the "report" schema created by the pipeline.  There you should have copies of each table used for this report.    
 
 
 
