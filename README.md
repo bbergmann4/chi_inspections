@@ -12,7 +12,7 @@ Use this repo to build your own data pipeline for Chicago Food Safety Inspection
 Full instructions below.
 
 # The Problem
-This workflow aims to build a pipeline from the City of Chicago’s data portal to a big query data warehouse and dashboard. The pipeline will load, validate, and re-structure this data.
+This workflow aims to build a pipeline from the City of Chicago’s Data Portal to a Google BigQuery data warehouse and dashboard. The pipeline will load, validate, and re-structure this data.
 
 
 This pipeline will answer questions like:
@@ -38,7 +38,7 @@ In order to accomplish these goals, I plan to use the following tools:
 
 ## Chicago Data Portal
 
-The City of Chicago maintains a large library of public datasets in a variety of formats.  Many of these are accessible through their SODA3 API.  The data from this project is sourced from the following Food Inspections Since 07/01/2018 dataset.
+The City of Chicago maintains a large library of public datasets in a variety of formats.  Many of these are accessible through their SODA3 API.  The data from this project is sourced from the following *Food Inspections Since 07/01/2018* dataset.
 
 This metadata page provides a description of the dataset, columns, datatypes, and the api url.
 
@@ -61,21 +61,18 @@ Our end result of this process is a pretty simple star schema:
 
 ## Initial Setup
 
-This project is intended to be run in Github Codespaces for quick replicability.  
+Feel free to create a fork of this repository or use github importer to make a disconnected copy in your github.  
 
-Feel free to create a fork of this repository or use github importer to make a disconnected copy in your github.  I've built this so that you can easily replicate this workflow the Github Codespaces. If you follow this path, all of the tools needed will be installed using the .devcontainer.json file and you will provide all credentials needed through codespace secrets.  
+This project is intended to be run in Github Codespaces for quick replicability.  All of the tools needed will be installed using the .devcontainer.json file and you will provide all credentials needed through codespace secrets.  It is possible to run this process in a docker image or standalone virtual machine with small changes.  Instead of storing secrets in github, you would store them as environment variables.  Use .devcontainer as your guide for dependencies.  
 
-It is possible to run this process on a standalone virtual machine with minimal changes.  Instead of storing secrets in github, you would store them as environment variables. 
-
-Before getting started, you will need to have your own google cloud platform account. The files are of relatively trivial size and it is not a highly computational process.  You will also be required to provide information to sign up for a free API account with the City of Chicago (described below)
+Before getting started, you will need to have your own google cloud platform account. The files are of relatively trivial size and it is not a highly computational process.  You will also be required to provide basic contact information to sign up for a free API account with the City of Chicago (described below)
 
 ## Credentials
 
 ### Google Cloud Platform
 
-You will need to create service account credentials by following the instructions [here](https://developers.google.com/workspace/guides/create-credentials).  
+You will need to create service account credentials [full instructions here](https://developers.google.com/workspace/guides/create-credentials).  
 
-In short,
 1. Go to Menu > IAM & Admin > Service Accounts
 2. Click Create service account
 3. Fill out details and assign roles to the account
@@ -93,9 +90,9 @@ Or, you can simply assign the BigQuery Admin role.
 In order to call the API, you will need to have an api key. You can do this by visiting the [developer page](https://data.cityofchicago.org/profile/edit/developer_settings). 
 
 1. Click create new account at the bottom and fill out your account information 
-2. When requested, verify your address and [sign in](https://data.cityofchicago.org/login )
+2. When requested, verify your email address and [sign in](https://data.cityofchicago.org/login )
 3. Now, your username will appear on the top right.  Click on your username drop down and go to [Developer Settings](https://data.cityofchicago.org/profile/edit/developer_settings)
-4.  Now you should see a button to create a new API key.  Copy the secret in a safe place for now so that you can save it in to github secrets.
+4.  Now you should see a button to create a new API key.  Copy these secrets in a safe place.
 
 ### Storing Credentials
 
