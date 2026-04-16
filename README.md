@@ -181,7 +181,8 @@ Once you have run the pipeline, recreating the report is simple.
 2.  Click the dots to make a copy 
 <img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/make_a_copy.png" width="30%">
 It may ask you some setup steps if you haven't used Data Studio before.
-4.  Now, it will give you options to replace my datasource with your own.  You can add the tables from your pipeline by clicking on the dropdown and selecting add new datasource.  
+
+3.  Now, it will give you options to replace my datasource with your own.  You can add the tables from your pipeline by clicking on the dropdown and selecting add new datasource.  
 <img src="https://github.com/bbergmann4/chi_inspections/blob/bb4dbedef28c1fd6ce11725c9317cba2f4244b3d/docs/images/copy_datasource.png" width="30%">
 Click on bigquery and select your project and the "report" schema created by the pipeline.  There you should have copies of each table used for this report.    
 
