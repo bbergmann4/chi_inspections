@@ -60,7 +60,7 @@ def main():
                     ('stage', 'location'), 
                     ('report', 'inspection_by_licensee'), 
                     ('report','inspection_by_month')]
-    datasets = ['ingest', 'stage','report']
+    datasets = ['ingest','ingest_staging','stage','report']
     print("WARNING!  This script will delete all tables created in this pipeline.  Make sure you have backed up any data you want to keep before running this script.")
     print("Process will delete the contents and then drop the following tables:")
     for table in tables:
