@@ -5,7 +5,7 @@ Data Engineering Zoomcamp 2026 Project
 
 Use this repo to build your own data pipeline for Chicago Food Safety Inspections from the Chicago Data Portal to the Google Cloud.
 1.  Create a [Data Portal API Key](https://data.cityofchicago.org/signup) and a [GCP Service Account](https://developers.google.com/workspace/guides/create-credentials) and load it in to [Github Codespace Secrets](https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces) (CHI_API_ID, CHI_API_SECRET, GCP_PROJECT_ID, GCP_SERVICE_CRED)
-2.  Open in Github Codespace and run `bruin run food-inspections`
+2.  Open in Github Codespace and run `bruin run food-inspections --full-refresh`
 3.  Copy [my report](https://datastudio.google.com/s/gOLV-FVKGrk) and link your own data.
 4.  When you are done, delete your assets in bigquery with the cleanup script:  `uv run cleanup.py`
 
@@ -61,7 +61,7 @@ Our end result of this process is a pretty simple star schema:
 
 ## Initial Setup
 
-Feel free to create a fork of this repository or use github importer to make a disconnected copy in your github.  
+Feel free to create a fork of this repository or use github importer (plus + mark in top right) to make a disconnected copy in your github.  
 
 This project is intended to be run in Github Codespaces for quick replicability.  All of the tools needed will be installed using the .devcontainer.json file and you will provide all credentials needed through codespace secrets.  It is possible to run this process in a docker image with small changes:  Use [docs/dockeroption.yml](docs/dockeroption.yml) as your starting point.    
 
@@ -147,11 +147,11 @@ Project ID
   3.  In the terminal, run 
 
   ```
-  bruin run food-inpections
+  bruin run food-inpections --full-refresh
 
   ```
 
-  On the first run it will take longer as bruin uses uv to load dependencies.  If you encounter Not Found errors, try `bruin run food-inspections --full-refresh`
+  On the first run it will take longer as bruin uses uv to load dependencies. 
 
 To learn more about this process, go to [food-inspections/README.MD](food-inspections/README.md)
 

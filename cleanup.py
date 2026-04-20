@@ -53,6 +53,8 @@ def main():
                     ('ingest', '_dlt_loads'),
                     ('ingest', '_dlt_pipeline_state'),
                     ('ingest', '_dlt_version'),
+                    ('ingest_staging', 'inspections_raw'),
+                    ('ingest_staging', '_dlt_version'),
                     ('stage','inspection'), 
                     ('stage', 'licensee'), 
                     ('stage', 'location'), 
